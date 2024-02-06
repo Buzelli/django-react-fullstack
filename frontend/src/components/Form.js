@@ -7,11 +7,13 @@ import {
 addProduct,
 removeProduct
 } from '../slices/productSlices'
+import { Button } from "@mui/material";
+
 export default function FormHome() {
     
     const dispatch = useDispatch();
 
-    const products = useSelector((state) => state.productStore)
+    const products = useSelector((state) => state.productStore.products)
 
     const [item, setItem] = useState('');
     const [quantidade, setQuantidade] = useState('');
@@ -20,10 +22,18 @@ export default function FormHome() {
         const item = produtos.filter((item)=>item.nome.includes(e.toString()))
         console.log(item)
         if(item){
-          dispatch(addProduct(item));
+          setItem(item)
         }
         console.log(products)
     }
+
+    const addToTable = (item) =>{
+      dispatch(addProduct(item))
+    }
+
+    useEffect(()=>{
+      console.log(products)
+    },[products]);
 
   return (
     <Box
@@ -46,6 +56,13 @@ export default function FormHome() {
             variant="outlined" 
             value={quantidade} 
         />
+        {
+          item ?
+          item.map((it)=>
+          <Button onClick={(e)=>addToTable(it)}>{it.nome}</Button>
+          ):
+          (<h4></h4>)
+        }
     </Box>
   );
 }
